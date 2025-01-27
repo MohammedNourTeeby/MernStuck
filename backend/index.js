@@ -15,7 +15,13 @@ app.use(express.json());
 
 // Middleware للتعامل مع سياسة CORS
 // السماح لجميع المصادر
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://mern-stuck-h83r.vercel.app", // هذا هو النطاق الذي تريد السماح له
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 // إذا كنت تريد السماح لمصدر معين فقط
 // app.use(
 //   cors({
@@ -42,8 +48,8 @@ mongoose
   })
   .then(() => {
     console.log("Connected to the database successfully!");
-    app.listen(PORT || 5000, () => {
-      console.log(`Server is running on port: ${PORT || 5000}`);
+    app.listen(PORT || 5555, () => {
+      console.log(`Server is running on port: ${PORT || 5555}`);
     });
   })
   .catch((error) => {
