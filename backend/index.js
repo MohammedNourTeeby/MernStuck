@@ -17,7 +17,7 @@ app.use(express.json());
 // السماح لجميع المصادر
 app.use(
   cors({
-    origin: "https://mern-stuck-h83r.vercel.app", // هذا هو النطاق الذي تريد السماح له
+    origin: "https://mern-stuck-hv7z.vercel.app", // هذا هو النطاق الذي تريد السماح له
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   })
