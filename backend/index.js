@@ -1,41 +1,52 @@
 import express from "express";
-import { PORT } from "./config.js";
 import mongoose from "mongoose";
-import booksRoute from "./routes/booksRoute.js";
 import cors from "cors";
+import booksRoute from "./routes/booksRoute.js";
+import { PORT } from "./config.js";
+import dotenv from "dotenv";
+
+// تحميل متغيرات البيئة من ملف .env
+dotenv.config();
 
 const app = express();
 
-// Middleware for parsing request body
+// Middleware لمعالجة بيانات JSON
 app.use(express.json());
 
-// Middleware for handling CORS POLICY
-// Option 1: Allow All Origins with Default of cors(*)
+// Middleware للتعامل مع سياسة CORS
+// السماح لجميع المصادر
 app.use(cors());
-// Option 2: Allow Custom Origins
+// إذا كنت تريد السماح لمصدر معين فقط
 // app.use(
 //   cors({
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type'],
+//     origin: "http://localhost:3000", // ضع هنا عنوان الـ Frontend
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type"],
 //   })
 // );
 
-app.get("/", (request, response) => {
-  console.log(request);
-  return response.status(234).send("Welcome To MERN Stack Tutorial");
+// نقطة البداية
+app.get("/", (req, res) => {
+  console.log("Incoming Request:", req.method, req.url);
+  res.status(200).send("Welcome to the MERN Stack Tutorial!");
 });
 
+// ربط مسار الكتب
 app.use("/books", booksRoute);
 
+// الاتصال بقاعدة البيانات وتشغيل السيرفر
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
-    console.log("App connected to database");
-    app.listen(PORT, () => {
-      console.log(`App is listening to port: ${process.env.PORT}`);
+    console.log("Connected to the database successfully!");
+    app.listen(PORT || 5000, () => {
+      console.log(`Server is running on port: ${PORT || 5000}`);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.error("Failed to connect to the database:", error.message);
+    process.exit(1); // إنهاء التطبيق إذا فشل الاتصال
   });
